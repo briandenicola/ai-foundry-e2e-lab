@@ -1,14 +1,9 @@
 resource "azurerm_role_assignment" "ai_services_user" {
-  scope                            = azapi_resource.ai_services.id
+  scope                            = azapi_resource.foundry.id
   role_definition_name             = "Cognitive Services OpenAI User"
   principal_id                     = data.azurerm_client_config.current.object_id
 }
 
-resource "azurerm_role_assignment" "foundry_ai_user" {
-  scope                            = azurerm_ai_foundry.this.id
-  role_definition_name             = "Cognitive Services OpenAI User"
-  principal_id                     = data.azurerm_client_config.current.object_id
-}
 
 resource "azurerm_role_assignment" "key_user" {
   scope                            = azurerm_key_vault.this.id

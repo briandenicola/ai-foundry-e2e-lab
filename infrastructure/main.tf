@@ -14,5 +14,7 @@ locals {
   appinsights_name            = "${local.resource_name}-appinsights"
   loganalytics_name           = "${local.resource_name}-logs"
   search_service_name         = "${local.resource_name}-search"
-  bing_ground_connection_name = "Hub-to-BingGrounding"
+  bing_ground_connection_name = "bing-connection"
+  ai_search_connection_name   = "search-connection"
+
 }

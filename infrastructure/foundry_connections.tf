@@ -1,30 +1,31 @@
-resource "azapi_resource" "llm_to_agent_project_connection" {
-  type      = "Microsoft.MachineLearningServices/workspaces/connections@2025-01-01-preview"
-  name      = "Hub-to-AIServices"
-  parent_id = azurerm_ai_foundry.this.id
+resource "azapi_resource" "ai_search_connection" {
+  type      = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+  name      = local.ai_search_connection_name
+  parent_id = azapi_resource.foundry_project.id
 
   body = {
     properties = {
-      category      = "AIServices"
+      category      = "CognitiveSearch"
+      authType      = "ApiKey"
       isSharedToAll = true
       metadata = {
         ApiType    = "Azure"
-        ResourceId = data.azurerm_cognitive_account.this.id
-        Location   = data.azurerm_cognitive_account.this.location
+        ResourceId = azapi_resource.ai_search.id
+        type       = "ai_serach"
       }
-      target   = azurerm_ai_foundry.this.id
-      authType = "ApiKey"
+      target = azapi_resource.ai_search.output.properties.endpoint
       credentials = {
-        key = data.azurerm_cognitive_account.this.primary_access_key
+        key = data.azapi_resource_action.search_keys.output.primaryKey
       }
     }
   }
 }
 
-resource "azapi_resource" "bing_to_agent_project_connection" {
-  type      = "Microsoft.MachineLearningServices/workspaces/connections@2025-01-01-preview"
+resource "azapi_resource" "bing_connection" {
+  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+
   name      = local.bing_ground_connection_name
-  parent_id = azurerm_ai_foundry.this.id
+  parent_id = azapi_resource.foundry_project.id
 
   body = {
     properties = {
@@ -36,23 +37,10 @@ resource "azapi_resource" "bing_to_agent_project_connection" {
         ResourceId = azapi_resource.bing_grounding.id
         type       = "bing_grounding"
       }
-      target   = "${azapi_resource.bing_grounding.output.properties.endpoint}"
+      target = azapi_resource.bing_grounding.output.properties.endpoint
       credentials = {
         key = data.azapi_resource_action.bing_keys.output.key1
       }
     }
   }
 }
-
-# data "azapi_resource_action" "rotate_openai_key1" {
-#   type        = "Microsoft.Bing/accounts@2025-05-01-preview"
-#   resource_id = azapi_resource.bing_grounding.id
-#   action      = "regenerateKey"
-#   method      = "POST"
-
-#   body = {
-#     keyName = "Key1"
-#   }
-
-#   response_export_values = ["*"]
-# }

@@ -18,7 +18,7 @@ resource "azapi_resource" "ai_search" {
       replicaCount     = 1
       partitionCount   = 1
       hostingMode      = "default"
-      semanticSearch   = "disabled"
+      semanticSearch   = "standard"
       disableLocalAuth = false
       authOptions = {
         aadOrApiKey = {

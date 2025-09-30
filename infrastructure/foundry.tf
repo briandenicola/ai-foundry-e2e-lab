@@ -1,5 +1,5 @@
 data "azurerm_cognitive_account" "this" {
-    depends_on          = [azapi_resource.ai_services]
+    depends_on          = [azapi_resource.foundry]
     name                = local.ai_foundry_name
     resource_group_name = azurerm_resource_group.this.name
 }
@@ -8,7 +8,7 @@ data "azurerm_monitor_diagnostic_categories" "this" {
     resource_id = data.azurerm_cognitive_account.this.id
 }
 
-resource "azapi_resource" "ai_services" {
+resource "azapi_resource" "foundry" {
     type      = "Microsoft.CognitiveServices/accounts@2025-06-01"
     name      = local.ai_foundry_name
     location  = azurerm_resource_group.this.location

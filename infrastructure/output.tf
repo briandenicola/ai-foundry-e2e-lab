@@ -18,19 +18,15 @@ output "APP_RESOURCE_GROUP" {
     sensitive = false
 }
 
-output "OPENAI_ENDPOINT" {
-    value = azurerm_ai_foundry.this.discovery_url
-    sensitive = false
-}
-
 output "PROJECT_CONNECTION_STRING" {
-    #<HostName>;<AzureSubscriptionId>;<ResourceGroup>;<ProjectName>    
-    value = "${trimsuffix(trimprefix(azurerm_ai_foundry.this.discovery_url,"https://"), "/discovery")};${data.azurerm_subscription.current.subscription_id};${local.resource_name}-ai_rg;${local.project_name}" 
+    #Hub Style Connection String: value = "${trimsuffix(trimprefix(azurerm_ai_foundry.this.discovery_url,"https://"), "/discovery")};${data.azurerm_subscription.current.subscription_id};${local.resource_name}-ai_rg;${local.project_name}" 
+    value = "https://${local.ai_foundry_name}.services.ai.azure.com/api/projects/${local.project_name}" 
+    
     sensitive = false
 }
 
-output "AZURE_AI_PROJECT_ENDPOINT" {
-    value = "https://${local.resource_name}.cognitiveservices.azure.com/" 
+output "AZURE_AI_PROJECT_ENDPOINT" {    
+    value = "https://${local.ai_foundry_name}.services.ai.azure.com/api/projects/${local.project_name}" 
     sensitive = false
 }
 

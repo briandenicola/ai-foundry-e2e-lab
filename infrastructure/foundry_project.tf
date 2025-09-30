@@ -1,9 +1,19 @@
-resource "azurerm_ai_foundry_project" "this" {
-  name                           = local.project_name
-  location                       = azurerm_ai_foundry.this.location
-  ai_services_hub_id             = azurerm_ai_foundry.this.id
+resource "azapi_resource" "foundry_project" {
+    type      = "Microsoft.CognitiveServices/accounts/projects@2025-06-01"
+    name      = local.project_name
+    location  = azurerm_resource_group.this.location
+    parent_id = azapi_resource.foundry.id
 
-  identity {
-    type = "SystemAssigned"
-  }
+    identity {
+        type = "SystemAssigned, UserAssigned"
+        identity_ids = [
+            azurerm_user_assigned_identity.foundry_identity.id
+        ]
+    }
+
+    body = {
+        properties = {
+          displayName = local.project_name
+        }
+    }
 }
