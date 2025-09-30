@@ -1,0 +1,18 @@
+
+
+locals {
+  location                    = var.region
+  resource_name               = "${random_pet.this.id}-${random_id.this.dec}"
+  ai_services_name            = "${local.resource_name}-ai-services"
+  ai_foundry_name             = "${local.resource_name}-foundry"
+  hub_name                    = "${local.resource_name}-aihub"
+  project_name                = "${local.resource_name}-project"
+  kv_name                     = "${local.resource_name}-kv"
+  bing_name                   = "${local.resource_name}-bing-grounding"
+  acr_name                    = "${replace(local.resource_name, "-", "")}acr"
+  storage_account_name        = "${replace(local.resource_name, "-", "")}sa"
+  appinsights_name            = "${local.resource_name}-appinsights"
+  loganalytics_name           = "${local.resource_name}-logs"
+  search_service_name         = "${local.resource_name}-search"
+  bing_ground_connection_name = "Hub-to-BingGrounding"
+}

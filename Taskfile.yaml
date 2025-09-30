@@ -1,0 +1,98 @@
+version: '3'
+
+env:
+  AIF_BASIC_TITLE: "AI Foundry - End to End Workshop"
+  DEFAULT_REGION: eastus2
+
+tasks:
+  default: 
+    cmds: 
+    - task --list 
+  
+  up: 
+    desc: Builds a Complete {{.AIF_BASIC_TITLE}} Environment
+    cmds:
+    - task: init
+    - task: apply 
+    - task: creds
+
+  init:
+    dir: ./infrastructure
+    desc: Initializes Terraform workspace
+    cmds:
+    - terraform workspace new {{.REGION}} || true
+    - terraform workspace select {{.REGION}}
+    - terraform init
+    vars: 
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
+
+  apply:
+    dir: ./infrastructure
+    desc: Creates Azure infrastructure
+    cmds:
+    - terraform apply -auto-approve
+      -var "region={{.REGION}}" 
+      -var "tags={{.AIF_BASIC_TITLE}}"
+      -compact-warnings
+    vars: 
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
+
+  refresh:
+    dir: ./infrastructure
+    cmds:
+    - terraform refresh
+      -var "region={{.REGION}}" 
+      -var "tags={{.AIF_BASIC_TITLE}}"
+      -compact-warnings
+    vars: 
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
+
+  creds:
+    dir: ./infrastructure
+    cmds:    
+    - cmd: echo PROJECT_CONNECTION_STRING="{{.PROJECT_CONNECTION_STRING}}" > ../.env
+      silent: true
+    - cmd: echo AZURE_AI_PROJECT_ENDPOINT="{{.AZURE_AI_PROJECT_ENDPOINT}}" >> ../.env
+      silent: true
+    - cmd: echo MODEL_DEPLOYMENT_NAME="{{.MODEL_DEPLOYMENT_NAME}}" >> ../.env
+      silent: true
+    - cmd: echo EMBEDDING_MODEL_DEPLOYMENT_NAME="{{.EMBEDDING_MODEL_DEPLOYMENT_NAME}}" >> ../.env
+      silent: true
+    - cmd: echo TENANT_ID="{{.TENANT_ID}}" >> ../.env
+      silent: true
+    - cmd: echo AZURE_SUBSCRIPTION_ID="{{.AZURE_SUBSCRIPTION_ID}}" >> ../.env
+      silent: true
+    - cmd: echo GROUNDING_WITH_BING_CONNECTION_NAME="{{.GROUNDING_WITH_BING_CONNECTION_NAME}}" >> ../.env
+      silent: true
+    - cmd: echo AZURE_AI_SEARCH_ENDPOINT="{{.AZURE_AI_SEARCH_ENDPOINT}}" >> ../.env
+      silent: true
+    - cmd: echo AZURE_AI_SEARCH_API_KEY="{{.AZURE_AI_SEARCH_API_KEY}}" >> ../.env
+      silent: true
+    vars:
+      PROJECT_CONNECTION_STRING: 
+        sh: terraform output -raw PROJECT_CONNECTION_STRING
+      AZURE_AI_PROJECT_ENDPOINT:
+        sh: terraform output -raw AZURE_AI_PROJECT_ENDPOINT
+      MODEL_DEPLOYMENT_NAME:
+        sh: terraform output -raw MODEL_DEPLOYMENT_NAME
+      EMBEDDING_MODEL_DEPLOYMENT_NAME: 
+        sh: terraform output -raw EMBEDDING_MODEL_DEPLOYMENT_NAME
+      TENANT_ID:
+        sh: terraform output -raw TENANT_ID
+      AZURE_SUBSCRIPTION_ID:
+        sh: terraform output -raw AZURE_SUBSCRIPTION_ID        
+      GROUNDING_WITH_BING_CONNECTION_NAME:
+        sh: terraform output -raw GROUNDING_WITH_BING_CONNECTION_NAME
+      AZURE_AI_SEARCH_ENDPOINT:
+        sh: terraform output -raw AZURE_AI_SEARCH_ENDPOINT
+      AZURE_AI_SEARCH_API_KEY:
+        sh: terraform output -raw AZURE_AI_SEARCH_API_KEY
+
+  down:
+    dir: ./infrastructure
+    desc: Destroys all Azure resources and cleans up Terraform
+    cmds:       
+    - terraform destroy -var "region={{.REGION}}" -var "tags={{.AIF_BASIC_TITLE}}" -compact-warnings || true
+    - rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info || true
+    vars: 
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
