@@ -14,7 +14,8 @@ locals {
   appinsights_name            = "${local.resource_name}-appinsights"
   loganalytics_name           = "${local.resource_name}-logs"
   search_service_name         = "${local.resource_name}-search"
+  openai_name                 = "${local.resource_name}-openai"
   bing_ground_connection_name = "bing-connection"
   ai_search_connection_name   = "search-connection"
-
+  aoai_connection_name        = "aoai-connection"
 }
