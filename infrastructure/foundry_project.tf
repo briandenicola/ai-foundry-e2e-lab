@@ -17,3 +17,7 @@ resource "azapi_resource" "foundry_project" {
         }
     }
 }
+
+data "azurerm_monitor_diagnostic_categories" "foundry_project" {
+    resource_id = azapi_resource.foundry_project.id
+}
