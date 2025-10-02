@@ -20,6 +20,7 @@ locals {
   bing_ground_connection_name           = "bing-connection"
   ai_search_connection_name             = "search-connection"
   aoai_connection_name                  = "aoai-connection"
+  app_insights_connection_name          = "app-insights-connection"
   content_understanding_connection_name = "content-understanding-connection"
 
 }

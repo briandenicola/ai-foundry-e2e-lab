@@ -92,3 +92,27 @@ resource "azapi_resource" "content_understanding_connection" {
     }
   }
 }
+
+resource "azapi_resource" "app_insights_connection" {
+  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+
+  name      = local.app_insights_connection_name
+  parent_id = azapi_resource.foundry_project.id
+
+  body = {
+    properties = {
+      category      = "AppInsights"
+      authType      = "ApiKey"
+      isSharedToAll = true
+      metadata = {
+        ApiType    = "Azure"
+        ResourceId = azurerm_application_insights.this.id
+        type       = "azure_app_insights"
+      }
+      target = azurerm_application_insights.this.id 
+      credentials = {
+        key = azurerm_application_insights.this.connection_string
+      }
+    }
+  }
+}
