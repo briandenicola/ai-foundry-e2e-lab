@@ -68,3 +68,27 @@ resource "azapi_resource" "aoai_connection" {
     }
   }
 }
+
+resource "azapi_resource" "content_understanding_connection" {
+  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+
+  name      = local.content_understanding_connection_name
+  parent_id = azapi_resource.foundry_project.id
+
+  body = {
+    properties = {
+      category      = "AzureOpenAI"
+      authType      = "ApiKey"
+      isSharedToAll = true
+      metadata = {
+        ApiType    = "Azure"
+        ResourceId = data.azurerm_cognitive_account.content_understanding.id
+        type       = "azure_open_ai"
+      }
+      target = data.azurerm_cognitive_account.content_understanding.endpoint
+      credentials = {
+        key = data.azurerm_cognitive_account.content_understanding.primary_access_key
+      }
+    }
+  }
+}

@@ -6,3 +6,9 @@ variable "region" {
 variable "tags" {
   description = "Tags to apply to Resource Group"
 }
+
+variable "deploy_content_understanding" {
+  description = "Whether to deploy Content Understanding resources"
+  type        = bool
+  default     = true
+}
