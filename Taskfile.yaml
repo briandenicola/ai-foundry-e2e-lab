@@ -71,7 +71,9 @@ tasks:
     - cmd: echo SERVICE_FOR_CU="{{.SERVICE_FOR_CU}}" >> ../.env
       silent: true
     - cmd: echo SERVICE_API_FOR_CU="{{.SERVICE_API_FOR_CU}}" >> ../.env
-      silent: true    
+      silent: true
+    - cmd: echo SAMPLE_CLAIMS_BUNDLE="{{.SAMPLE_CLAIMS_BUNDLE}}" >> ../.env
+      silent: true         
     - cmd: echo AZURE_OPENAI_ENDPOINT="{{.AZURE_OPENAI_ENDPOINT}}" >> ../.env
       silent: true    
     - cmd: echo AZURE_OPENAI_API_KEY="{{.AZURE_OPENAI_API_KEY}}" >> ../.env
@@ -107,7 +109,7 @@ tasks:
         sh: terraform output -raw AZURE_OPENAI_API_KEY
       AZURE_OPENAI_DEPLOYMENT:
         sh: terraform output -raw AZURE_OPENAI_DEPLOYMENT
-
+      SAMPLE_CLAIMS_BUNDLE: "Data/sample claim submission.pdf"
   down:
     dir: ./infrastructure
     desc: Destroys all Azure resources and cleans up Terraform
