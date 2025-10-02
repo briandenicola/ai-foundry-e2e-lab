@@ -64,3 +64,18 @@ output "SERVICE_API_FOR_CU" {
   value     = "2025-05-01-preview"
   sensitive = false
 }
+
+output AZURE_OPENAI_ENDPOINT {
+  value     = azurerm_cognitive_account.azure_open_ai.endpoint
+  sensitive = false
+}
+
+output AZURE_OPENAI_API_KEY {
+  value     = azurerm_cognitive_account.azure_open_ai.primary_access_key
+  sensitive = true
+}
+
+output AZURE_OPENAI_DEPLOYMENT {
+  value     = azurerm_cognitive_deployment.gpt_4o.name
+  sensitive = false
+}

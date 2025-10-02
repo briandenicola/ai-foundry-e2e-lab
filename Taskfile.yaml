@@ -68,6 +68,16 @@ tasks:
       silent: true
     - cmd: echo AZURE_AI_SEARCH_API_KEY="{{.AZURE_AI_SEARCH_API_KEY}}" >> ../.env
       silent: true
+    - cmd: echo SERVICE_FOR_CU="{{.SERVICE_FOR_CU}}" >> ../.env
+      silent: true
+    - cmd: echo SERVICE_API_FOR_CU="{{.SERVICE_API_FOR_CU}}" >> ../.env
+      silent: true    
+    - cmd: echo AZURE_OPENAI_ENDPOINT="{{.AZURE_OPENAI_ENDPOINT}}" >> ../.env
+      silent: true    
+    - cmd: echo AZURE_OPENAI_API_KEY="{{.AZURE_OPENAI_API_KEY}}" >> ../.env
+      silent: true    
+    - cmd: echo AZURE_OPENAI_DEPLOYMENT="{{.AZURE_OPENAI_DEPLOYMENT}}" >> ../.env
+      silent: true          
     vars:
       PROJECT_CONNECTION_STRING: 
         sh: terraform output -raw PROJECT_CONNECTION_STRING
@@ -87,6 +97,16 @@ tasks:
         sh: terraform output -raw AZURE_AI_SEARCH_ENDPOINT
       AZURE_AI_SEARCH_API_KEY:
         sh: terraform output -raw AZURE_AI_SEARCH_API_KEY
+      SERVICE_FOR_CU:
+        sh: terraform output -raw SERVICE_FOR_CU
+      SERVICE_API_FOR_CU:
+        sh: terraform output -raw SERVICE_API_FOR_CU
+      AZURE_OPENAI_ENDPOINT: #=https://your-openai-resource.openai.azure.com/
+        sh: terraform output -raw AZURE_OPENAI_ENDPOINT
+      AZURE_OPENAI_API_KEY:
+        sh: terraform output -raw AZURE_OPENAI_API_KEY
+      AZURE_OPENAI_DEPLOYMENT:
+        sh: terraform output -raw AZURE_OPENAI_DEPLOYMENT
 
   down:
     dir: ./infrastructure

@@ -22,5 +22,5 @@ locals {
   aoai_connection_name                  = "aoai-connection"
   app_insights_connection_name          = "app-insights-connection"
   content_understanding_connection_name = "content-understanding-connection"
-
+  storage_connection_name               = "storage-connection"
 }

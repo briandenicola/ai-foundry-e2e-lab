@@ -16,6 +16,8 @@ resource "azapi_resource" "foundry_project" {
           displayName = local.project_name
         }
     }
+
+    response_export_values = ["identity.principalId"]
 }
 
 data "azurerm_monitor_diagnostic_categories" "foundry_project" {

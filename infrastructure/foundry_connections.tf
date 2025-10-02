@@ -22,7 +22,8 @@ resource "azapi_resource" "ai_search_connection" {
 }
 
 resource "azapi_resource" "bing_connection" {
-  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+  depends_on = [azapi_resource.ai_search_connection]
+  type       = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
 
   name      = local.bing_ground_connection_name
   parent_id = azapi_resource.foundry_project.id
@@ -46,7 +47,8 @@ resource "azapi_resource" "bing_connection" {
 }
 
 resource "azapi_resource" "aoai_connection" {
-  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+  depends_on = [azapi_resource.bing_connection]
+  type       = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
 
   name      = local.aoai_connection_name
   parent_id = azapi_resource.foundry_project.id
@@ -70,7 +72,8 @@ resource "azapi_resource" "aoai_connection" {
 }
 
 resource "azapi_resource" "content_understanding_connection" {
-  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+  depends_on = [azapi_resource.aoai_connection]
+  type       = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
 
   name      = local.content_understanding_connection_name
   parent_id = azapi_resource.foundry_project.id
@@ -94,7 +97,8 @@ resource "azapi_resource" "content_understanding_connection" {
 }
 
 resource "azapi_resource" "app_insights_connection" {
-  type = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+  depends_on = [azapi_resource.content_understanding_connection]
+  type       = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
 
   name      = local.app_insights_connection_name
   parent_id = azapi_resource.foundry_project.id
@@ -109,9 +113,37 @@ resource "azapi_resource" "app_insights_connection" {
         ResourceId = azurerm_application_insights.this.id
         type       = "azure_app_insights"
       }
-      target = azurerm_application_insights.this.id 
+      target = azurerm_application_insights.this.id
       credentials = {
         key = azurerm_application_insights.this.connection_string
+      }
+    }
+  }
+}
+
+resource "azapi_resource" "storage_connection" {
+  depends_on = [azapi_resource.app_insights_connection,]
+  type       = "Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01"
+
+  name      = local.storage_connection_name
+  parent_id = azapi_resource.foundry_project.id
+
+  body = {
+    properties = {
+      category      = "AzureBlob"
+      authType      = "ManagedIdentity"
+      isSharedToAll = true
+      metadata = {
+        ApiType       = "Azure"
+        ResourceId    = azurerm_storage_account.this.id
+        type          = "azure_storage"
+        ContainerName = azurerm_storage_container.this.name
+        AccountName   = azurerm_storage_account.this.name
+      }
+      target = azurerm_storage_account.this.primary_blob_endpoint
+      credentials = {
+        clientId   = azurerm_user_assigned_identity.foundry_identity.client_id
+        resourceId = azurerm_user_assigned_identity.foundry_identity.id
       }
     }
   }
