@@ -20,13 +20,13 @@ resource "azurerm_resource_group" "logs" {
   }
 }
 
-resource "azurerm_resource_group" "core" {
-  name     = "${local.resource_name}-core_rg"
-  location = local.location
-  tags = {
-    Application = var.tags
-    DeployedOn  = timestamp()
-    AppName     = local.resource_name
-    Tier        = "Azure Key Vault; Azure Storage; Azure Container Registry"
-  }
-}
+# resource "azurerm_resource_group" "core" {
+#   name     = "${local.resource_name}-core_rg"
+#   location = local.location
+#   tags = {
+#     Application = var.tags
+#     DeployedOn  = timestamp()
+#     AppName     = local.resource_name
+#     Tier        = "Azure Key Vault; Azure Storage; Azure Container Registry"
+#   }
+# }
